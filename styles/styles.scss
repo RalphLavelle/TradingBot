@@ -1,0 +1,31 @@
+@import './variables.scss';
+
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+body {
+    color: #000;
+    font-size:16px;
+    line-height:24px;
+    font-weight:400;
+    margin: 0;
+    padding: 0;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+form {
+	input, button {
+		font-size: 1.2rem;
+	}
+}
+
+button {
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	background-color: $blue;
+	color: #fff;
+	//font-weight: bold;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
