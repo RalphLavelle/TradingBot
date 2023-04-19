@@ -1,19 +1,18 @@
 import styles from '../components/layout.module.scss';
 import { useEffect, useState } from 'react';
-import Dashboard from './dashboard'; 
+import Dashboard from './dashboard';
 
 function Index() {
 
 	const emptyForm = { username: '', password: '' };
-    const [formData, setFormData] = useState(emptyForm);
-	const [message, setMessage] = useState(null);
+	const [formData, setFormData] = useState(emptyForm);
 	const [step, setStep] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		setStep(1);
-    }, []);
+	}, []);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -30,12 +29,11 @@ function Index() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setMessage(null);
 		setError(null);
 		setLoading(true);
-		if(step === 1) {
+		if (step === 1) {
 			const user = await getUser(`password=${formData.password}`);
-			if(user) {
+			if (user) {
 				await fetch(`/api/users/${formData.username}?action=generateCode`, {
 					method: 'GET'
 				});
@@ -50,8 +48,7 @@ function Index() {
 			// check verification code
 			setLoading(true);
 			const user = await getUser(`code=${formData.code}`);
-			debugger;
-			if(user) {
+			if (user) {
 				setStep(3);
 			} else {
 				setError(`Incorrect code.`);
@@ -60,38 +57,40 @@ function Index() {
 		}
 	};
 
-    return (
+	return (
 		<>
 			<div className={styles.index}>
 				<h1>Bot Controller</h1>
-				<form onSubmit={handleSubmit}>
-					<div className={styles.username}>
-						<label>Username</label>
-						<input id="username" name="username" type="text" placeholder="Username" required onChange={handleInputChange} />
-					</div>
-					<div className={styles.password}>
-						<label>Password</label>
-						<input id="password" name="password" type="text" placeholder="Password" required onChange={handleInputChange} />
-					</div>
-					{ step === 2 ?
-						<>
-							<div className={styles.info}>
-								<p>Please check your email for a verification code.</p>
-							</div>
-							<div className={styles.code}>
-								<label>Code</label>
-								<input id="code" name="code" type="text" placeholder="Verification code" required onChange={handleInputChange} />
-							</div>
-						</>
-					: null }
-					<button type="submit">
-						{ !loading ? "Login" : <img src="/images/spinner.svg" alt="Loading" width="32" height="32" /> }
-					</button>
-					{ error ? <div className={styles.error}>{error}</div> : null }
-				</form>
-				{ message ? <div className={styles.message}>{message}</div> : null }
+				{step !== 3
+					?
+					<form onSubmit={handleSubmit}>
+						<div className={styles.username}>
+							<label>Username</label>
+							<input id="username" name="username" type="text" placeholder="Username" required onChange={handleInputChange} />
+						</div>
+						<div className={styles.password}>
+							<label>Password</label>
+							<input id="password" name="password" type="text" placeholder="Password" required onChange={handleInputChange} />
+						</div>
+						{step === 2 ?
+							<>
+								<div className={styles.info}>
+									<p>Please check your email for a verification code.</p>
+								</div>
+								<div className={styles.code}>
+									<label>Code</label>
+									<input id="code" name="code" type="text" placeholder="Verification code" required onChange={handleInputChange} />
+								</div>
+							</>
+							: null}
+						<button type="submit">
+							{!loading ? "Login" : <img src="/images/spinner.svg" alt="Loading" width="32" height="32" />}
+						</button>
+						{error ? <div className={styles.error}>{error}</div> : null}
+					</form>
+					: <Dashboard></Dashboard>
+				}
 			</div>
-			{ step === 3 ? <Dashboard></Dashboard> : null }
 		</>
 	);
 }

@@ -1,6 +1,6 @@
 function Dashboard() {
 	return (
-		<h1>Trading Bot Dashboard</h1>
+		<p>Welcome to the Dashboard!</p>
 	)
 }
 
