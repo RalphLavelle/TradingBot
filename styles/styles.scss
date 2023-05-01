@@ -16,10 +16,13 @@ body {
 
 form {
 	input, button, select {
-		font-size: 1.2rem;
+		@media (min-width: $small) {
+			font-size: 1.2rem;
+		}
 	}
 	input {
 		padding: 0.5rem;
+		max-width: 50%;
 	}
 	select {
 		padding: 1rem;
