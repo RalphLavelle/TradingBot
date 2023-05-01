@@ -34,12 +34,18 @@ function Index() {
 		if (step === 1) {
 			const user = await getUser(`password=${formData.password}`);
 			if (user) {
-				await fetch(`/api/users/${formData.username}?action=generateCode`, {
+				let response = await fetch(`/api/users/${formData.username}?action=generateCode`, {
 					method: 'GET'
 				});
-				setStep(2);
-				setError(null);
-				setLoading(false);
+				response = await response.json();
+				if(!response.error) {
+					setStep(2);
+					setError(null);
+					setLoading(false);
+				} else {
+					setError(response.error);
+					setLoading(false);
+				}
 			} else {
 				setError('User not found, or incorrect password.');
 				setLoading(false);

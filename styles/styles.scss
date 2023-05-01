@@ -15,8 +15,14 @@ body {
 }
 
 form {
-	input, button {
+	input, button, select {
 		font-size: 1.2rem;
+	}
+	input {
+		padding: 0.5rem;
+	}
+	select {
+		padding: 1rem;
 	}
 }
 
@@ -26,6 +32,8 @@ button {
 	cursor: pointer;
 	background-color: $blue;
 	color: #fff;
-	//font-weight: bold;
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	&:hover {
+		background-color: lighten($blue, 25%);
+	}
 }

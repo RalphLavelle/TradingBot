@@ -1,6 +1,10 @@
+import Bots from '../components/bots';
+
 function Dashboard() {
 	return (
-		<p>Welcome to the Dashboard!</p>
+		<>
+			<Bots></Bots>
+		</>
 	)
 }
 
