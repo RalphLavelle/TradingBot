@@ -22,44 +22,45 @@ export default async function handler(req, res) {
 		if (action) {
 			if (action === 'generateCode') {
 
-				// const accountSid = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID;
-				// const authToken = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN;
-				// const testNumber = '+30 698 339 9165';
+				const accountSid = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID;
+				const authToken = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN;
+				const fromNumber = '+61413634494';
+				const toNumber = '+61413634494';
 
-				// const twilioClient = require('twilio')(accountSid, authToken);
+				const twilioClient = require('twilio')(accountSid, authToken);
 
-				// try {
-				// 	await twilioClient.messages.create({
-				// 		body: "Hello from Twilio",
-				// 		from: testNumber,
-				// 		to: testNumber
-				// 	}).then(message => {
-				// 		console.log(`Message sent: ${message.sid}`);
-				// 		res.status(200).json({ success: true });
-				// 	});
-				// } catch (ex) {
-				// 	console.log(`Error: ${ex}`);
-				// 	const error = `Error sending message: ${ex.message}`;
-				// 	res.status(200).json({  success: false, error });
-				// }
+				try {
+					await twilioClient.messages.create({
+						body: "Testing testing...",
+						from: fromNumber,
+						to: toNumber
+					}).then(message => {
+						console.log(`Message sent: ${message.sid}`);
+						res.status(200).json({ success: true });
+					});
+				} catch (ex) {
+					console.log(`Error: ${ex}`);
+					const error = `Error sending message: ${ex.message}`;
+					res.status(200).json({  success: false, error });
+				}
 				res.status(200).json({ success: true });
 			}
 		}
 		if (code) {
 			let query = { username };
-			// const { results, client } = await mongo.get("users", query, true);
-			// console.log(`results: ${JSON.stringify(results)}`);
-			// if(results) {
-			// 	if(results.code == code) {
-			// 		res.status(200).json(true);
-			// 	} else {
-			// 		res.status(404).json(false);
-			// 	}
-			// } else {
-			// 	res.status(404).json(false);
-			// }
+			const { results, client } = await mongo.get("users", query, true);
+			console.log(`results: ${JSON.stringify(results)}`);
+			if(results) {
+				if(results.code == code) {
+					res.status(200).json(true);
+				} else {
+					res.status(404).json(false);
+				}
+			} else {
+				res.status(404).json(false);
+			}
 			res.status(200).json(true);
-			// client.close();
+			client.close();
 		}
 	}
 }
