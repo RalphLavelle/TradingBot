@@ -1,19 +1,32 @@
-import { TestDB } from '../../../components/TestDB';
-import kafka from 'kafka-node';
+import { MongoDB } from '../../../components/MongoDB';
+import { IBot } from '../../../interfaces';
 
 export default async function handler(req, res) {
 
-	// create a kafka client
-	//const kafkaHost = process.env.NEXT_PUBLIC_KAFKA_SERVER;
-	//const client = new kafka.KafkaClient({ kafkaHost });
-	//const producer = new kafka.Producer(client);
-	//const topic = "botcommands";
+	const mongo = new MongoDB();
 
 	if (req.method === 'GET') {
 		// get the bots
-		const testDB = new TestDB();
-		const bots = await testDB.getBots();
-		console.log(`bots: ${JSON.stringify(bots)}`);
+		let query = { running: '1' };
+		const { results, client } = await mongo.get("jobs", query, false);	
+		
+		console.log(`bots[0]: ${JSON.stringify(results[0])}`);
+
+		const bots = results.map(r => {
+			let bot: IBot = {
+				commandTopic: r.commandTopic,
+				id: r._id,
+				name: r._id,
+				exchange: r.exchange,
+				type: r.strategy, 
+				token: r.token || r.ticker || "?",
+				status: r.running == "1" ? "active" : "stopped",
+				timeStarted: r.issueTime
+			};
+			return bot;
+		});
+		
 		res.status(200).json(bots);
+		client.close();
 	}
 }

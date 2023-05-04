@@ -54,6 +54,10 @@ $width: 60%;
 		width: $width;
 	}
 	width: 100%;
+	h2 {
+		display: flex;
+		align-items: center;
+	}
 	.bot {
 		border: solid 1px $silver;
 		border-radius: 0.5rem;

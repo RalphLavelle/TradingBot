@@ -30,7 +30,7 @@ function Bots() {
 		results = results.map(r => {
 			return {
 				...r,
-				timeStarted: "12 Jan 2023, 5:24pm"
+				// timeStarted: "12 Jan 2023, 5:24pm"
 			}
 		})
 		setBots(results);
@@ -44,7 +44,6 @@ function Bots() {
 
 	const changeState = (action) => {
 		if(selectedBot.status != action) {
-			setActivityAlert(action == "active" ? "Starting..." : "Stopping...");
 			setTimeout(() => {
 				setActivityAlert(null);
 			}, 1000);
@@ -52,19 +51,51 @@ function Bots() {
 		}
 	}
 
-	const start = () => {
-		changeState("active");
+	const start = async () => {
+		setActivityAlert("Starting...");
+
+		const endpoint = `/api/bots/${selectedBot.id}`;
+		const response = await fetch(endpoint, {
+			method: 'POST',
+			body: JSON.stringify({
+				bot: selectedBot,
+				command: "start"
+			})
+		});
+		debugger;
+		const results = await response.json();
+		if(results.success) {
+			changeState("active");
+		} else {
+			setActivityAlert("Error!");
+		}
 	}
 
-	const stop = () => {
-		changeState("stopped");
+	const stop = async () => {
+		setActivityAlert("Stopping...");
+
+		const endpoint = `/api/bots/${selectedBot.id}`;
+		const response = await fetch(endpoint, {
+			method: 'POST',
+			body: JSON.stringify({
+				bot: selectedBot,
+				command: "stop"
+			})
+		});
+		debugger;
+		const results = await response.json();
+		if(results.success) {
+			changeState("stopped");
+		} else {
+			setActivityAlert("Error!");
+		}
 	}
 
 	return (
 		<>
 			<div className={styles.bots}>
-				<h2>Open bots</h2>
-				{ loading ? <img src="/images/spinner.svg" alt="Loading" width="32" height="32" /> : 
+				<h2>Running bots {loading ? <img src="/images/spinner2.svg" alt="Loading..." width="40" height="40" /> : `(${bots.length} found)`}</h2>
+				{ loading ? "" : 
 				<div className={styles.bot}>
 					<label>Environment:</label>
 					<span>{ environment }</span>
@@ -75,7 +106,7 @@ function Bots() {
 						<select onChange={(e) => chooseBot(e)}>
 							<option>----</option>
 							{ bots.map(bot => (
-								<option>{ bot.name }</option>
+								<option key={bot.name}>{ bot.name }</option>
 							))}
 						</select>
 					</form>
@@ -88,6 +119,8 @@ function Bots() {
 						<span>{ selectedBot.exchange }</span>
 						<label>Bot type:</label>
 						<span>{ selectedBot.type }</span>
+						<label>Command topic:</label>
+						<span>{ selectedBot.commandTopic }</span>
 						<label>Controls:</label>
 						<div className={styles.controls}>
 							<button className={ selectedBot.status != 'active' ? styles.start : styles.alreadyStarted } onClick={start}>START</button>
