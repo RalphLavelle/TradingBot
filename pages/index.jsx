@@ -1,7 +1,7 @@
 import styles from '../components/layout.module.scss';
 import { useEffect, useState } from 'react';
 import Dashboard from './dashboard';
-import QrCode from '../components/qrCode';
+import QrCode from '../components/qrcode';
 
 function Index() {
 
