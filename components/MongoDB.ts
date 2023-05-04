@@ -33,7 +33,8 @@ export class MongoDB {
 		const { client, collection } = await mongo.connect("users");
         const filter = { username: user.username };
 		await collection.updateOne(filter, { $set: {
-            code: user.code 
+            code: user.code,
+            registered: true
         }}, { upsert: true });
 		client.close();
     }

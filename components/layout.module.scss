@@ -27,7 +27,6 @@ $width: 60%;
 			justify-content: space-between;
 			gap: 1rem;
 			align-items: center;
-			height: 50px;
 		}
 		button {
 			height: 50px;
@@ -92,29 +91,13 @@ $width: 60%;
 			}
 		}
 	}
-// 	table {
-// 		width: 100%;	
-// 		border: solid 1px $silver;
-// 		border-radius: 0.5rem;
-// 		padding: 0.5rem;
-// 		thead {
-// 			th {
-// 				background-color: $silver;
-// 				padding: 0.5rem 0.25rem;
-// 				text-align: left;
-// 			}
-// 		}
-// 		tr {
-// 			&:hover {
-// 				background-color: $silver;
-// 			}
-// 		}
-// 		td {
-// 			padding: 0.25rem;
-// 			text-align: left;
-// 			button {
-// 				font-size: 1.25rem;
-// 			}
-// 		}
-// 	}
-}	
+}
+
+.qrcode {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;	
+	align-items: center;
+	padding: 2rem;
+	height: 200px;
+}

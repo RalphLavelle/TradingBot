@@ -1,7 +1,8 @@
 import { MongoDB } from '../../../components/MongoDB';
+import { authenticator } from 'otplib';
 
 export default async function handler(req, res) {
-	const { username, password, code, action } = req.query;
+	const { username, password, action } = req.query;
 	const mongo = new MongoDB();
 
 	if (req.method === 'GET') {
@@ -10,57 +11,51 @@ export default async function handler(req, res) {
 			const { results, client } = await mongo.get("users", query, true);
 			if(results) {
 				if(results.password === password) {
-					res.status(200).json(true);
+					res.status(200).json({ success: true, user: {
+						registered: results.registered,
+						username: results.username,
+						email: results.email
+					} });
 				} else {
-					res.status(200).json(false);
+					res.status(200).json({ success: false });
 				}
 			} else {
-				res.status(200).json(false);
+				res.status(200).json({ success: false });
 			}
 			client.close();
 		}
+	} else {
 		if (action) {
-			if (action === 'generateCode') {
-
-				const accountSid = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID;
-				const authToken = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN;
-				const fromNumber = '+61413634494';
-				const toNumber = '+61413634494';
-
-				const twilioClient = require('twilio')(accountSid, authToken);
-
-				try {
-					await twilioClient.messages.create({
-						body: "Testing testing...",
-						from: fromNumber,
-						to: toNumber
-					}).then(message => {
-						console.log(`Message sent: ${message.sid}`);
-						res.status(200).json({ success: true });
-					});
-				} catch (ex) {
-					console.log(`Error: ${ex}`);
-					const error = `Error sending message: ${ex.message}`;
-					res.status(200).json({  success: false, error });
-				}
-				res.status(200).json({ success: true });
-			}
-		}
-		if (code) {
 			let query = { username };
-			const { results, client } = await mongo.get("users", query, true);
-			console.log(`results: ${JSON.stringify(results)}`);
-			if(results) {
-				if(results.code == code) {
-					res.status(200).json(true);
+			if (action === 'saveCode') {
+				const { results, client } = await mongo.get("users", query, true);
+				const code = JSON.parse(req.body).code;
+				if(results) {
+					results.code = code;
+					await mongo.save(results)
+					res.status(200).json({ success: true });
 				} else {
-					res.status(404).json(false);
+					res.status(200).json({ success: false });
 				}
-			} else {
-				res.status(404).json(false);
+				client.close();
 			}
-			res.status(200).json(true);
-			client.close();
+			if (action === 'checkCode') {
+				let body = JSON.parse(req.body);
+				const code = body.code;
+				const { results, client } = await mongo.get("users", query, true);
+				if(results) {
+					const isValid = authenticator.check(code, results.code);
+					console.log(isValid);
+					if (!isValid) {
+						res.status(200).json({ success: false });
+					} else {
+						res.status(404).json({ success: true });
+					}
+				} else {
+					res.status(200).json({ success: false });
+				}
+				client.close();
+			}
 		}
 	}
 }
