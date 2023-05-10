@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 			let bot: IBot = {
 				commandTopic: r.commandTopic,
 				id: r._id,
-				name: r._id,
+				name: `${r.strategy}_${r.exchange}_${r.ticker}`,
 				exchange: r.exchange,
 				type: r.strategy, 
 				token: r.token || r.ticker || "?",
