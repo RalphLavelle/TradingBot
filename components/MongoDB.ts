@@ -28,14 +28,14 @@ export class MongoDB {
         return { results, client };
     }
 
-    save = async user => {
+    save = async (coll, filter, fields, upsert) => {
         const mongo = new MongoDB();
-		const { client, collection } = await mongo.connect("users");
-        const filter = { username: user.username };
-		await collection.updateOne(filter, { $set: {
-            code: user.code,
-            registered: true
-        }}, { upsert: true });
+		const { client, collection } = await mongo.connect(coll);
+        if(upsert) {
+		    await collection.updateOne(filter, { $set: fields}, { upsert });
+        } else {
+            await collection.insertOne(fields);
+        }
 		client.close();
     }
 }
