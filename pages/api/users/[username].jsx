@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 				const code = JSON.parse(req.body).code;
 				if(results) {
 					results.code = code;
-					await mongo.save("users", results,
+					await mongo.save("users",
 						{ username: results.username }, // filter
 						{ code: results.code, registered: true }, // fields to set
 						true // upsert

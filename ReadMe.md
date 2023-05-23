@@ -1,8 +1,13 @@
 BotController
 =============
 
+## To run
+> npm run dev
+
+Then browse to http://localhost:3000/
+
 ## Users
-Test users are in the MongoDB's 'users' collection. RL's account is 'Raftus', 'Raftus67'.
+Users are stored in the MongoDB's 'users' collection.
 
 ## Google Authenticator
-This app uses Google Authenticator for 2FA.
+This app uses Google Authenticator for 2FA. You will need to have this on your phone to be able to login.
