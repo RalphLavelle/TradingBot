@@ -9,11 +9,18 @@ export default async function handler(req, res) {
 		let query = { running: '1' };
 		const { results, client } = await mongo.get("jobs", query, false);	
 		
-		// console.log(`bots[0]: ${JSON.stringify(results[0])}`);
+		// console.log(`bots[0]: ${JSON.stringify(results)}`);
+
+		const setCommandTopic = ct => {
+			if(!ct || ct === "") {
+				return "testTopic";
+			}
+			return ct;
+		}
 
 		const bots = results.map(r => {
 			let bot: IBot = {
-				commandTopic: r.commandTopic,
+				commandTopic: setCommandTopic(r.commandTopic),
 				id: r._id,
 				name: `${r.strategy}_${r.exchange}_${r.ticker}`,
 				exchange: r.exchange,
